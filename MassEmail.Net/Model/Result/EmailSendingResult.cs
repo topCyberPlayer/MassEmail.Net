@@ -8,9 +8,9 @@ namespace MassEmail.Net.Model.Result
 {
     public class EmailSendingResult
     {
-        public bool IsSuccess { get; private set; }
+        public bool IsSuccess { get; }
 
-        public string ErrorDescription { get; private set; }
+        public string ErrorDescription { get; }
 
         public EmailSendingResult(bool isSuccess, string errorDescription = null)
         {

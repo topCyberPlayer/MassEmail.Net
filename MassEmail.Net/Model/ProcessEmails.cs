@@ -8,9 +8,7 @@ namespace MassEmail.Net.Model
     public class ProcessEmails
     {
         public void Start()
-        {
-            Console.WriteLine("Seee");
-
+        {          
             IQueue queue = new RabbitMqQueue();
 
             ICollection<string> listEmail = GetEmails(new Excel());

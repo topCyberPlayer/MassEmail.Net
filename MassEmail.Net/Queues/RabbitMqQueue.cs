@@ -70,7 +70,7 @@ namespace MassEmail.Net.Queues
 
         public void RemoveFromQueue(string email)
         {
-
+            //Необходимо реализовать логику удаления сообщения из очереди RabbitMQ при ручном удалении
         }
     }
 }

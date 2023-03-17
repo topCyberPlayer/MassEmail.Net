@@ -9,8 +9,17 @@ namespace MassEmail.Net.EmailDeliveryProvider
 {
     public interface IEmailDeliveryProvider
     {
+        /// <summary>
+        /// Возвращает название Службы доставки писем
+        /// </summary>
         string Name { get; }
 
+        /// <summary>
+        /// Отправлет письма
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="emailTo"></param>
+        /// <returns></returns>
         EmailSendingResult Send(EmailMessage message, string emailTo);
     }
 }
