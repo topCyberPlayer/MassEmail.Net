@@ -7,7 +7,7 @@ namespace MassEmail.Net.Queues
 {
     public class RabbitMqQueue : IQueue
     {
-        const string nameQueue = "CommonQueue";
+        const string nameQueue = "EmailQueue";
 
         public void SendToQueue(ICollection<string> listEmail)
         {
@@ -24,7 +24,7 @@ namespace MassEmail.Net.Queues
             using (var channel = connection.CreateModel())
             {
                 channel.QueueDeclare(queue: nameQueue,
-                                     durable: false,
+                                     durable: true,
                                      exclusive: false,
                                      autoDelete: false,
                 arguments: null);
@@ -47,22 +47,27 @@ namespace MassEmail.Net.Queues
             using (var channel = connection.CreateModel())
             {
                 channel.QueueDeclare(queue: nameQueue,
-                                     durable: false,
+                                     durable: true,
                                      exclusive: false,
                                      autoDelete: false,
                                      arguments: null);
 
-                var consumer = new EventingBasicConsumer(channel);
+                channel.BasicQos(prefetchSize: 0, prefetchCount: 1, global: false);
 
-                consumer.Received += (sender, e) =>
+                EventingBasicConsumer consumer = new EventingBasicConsumer(channel);
+
+                consumer.Received += (sender, ea) =>
                 {
-                    var body = e.Body;
-                    message = Encoding.UTF8.GetString(body.ToArray());                    
+                    var body = ea.Body;
+                    message = Encoding.UTF8.GetString(body.ToArray());
+
+                    channel.BasicAck(deliveryTag: ea.DeliveryTag, multiple: false);
                 };
 
                 channel.BasicConsume(queue: nameQueue,
-                                     autoAck: true,
+                                     autoAck: false,
                                      consumer: consumer);
+                
             }
 
             return message;
