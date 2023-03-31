@@ -1,12 +1,12 @@
 ﻿using MassEmail.Net.Model;
 using MimeKit;
+using System;
+using System.Linq;
 using System.Net;
 using System.Net.Mail;
 
 namespace MassEmail.Net.Samples.Console
 {
-
-
     internal class Program
     {
         static void Main(string[] args)
@@ -14,7 +14,9 @@ namespace MassEmail.Net.Samples.Console
             //new Program().UsingSmtpClient();
             //new Program().UsingMailKit();
 
-            new ProcessEmails().Start();
+            //new ProcessEmails().Start();
+
+            RandomEmaiGenerator.Start();
         }
 
         private void UsingSmtpClient()
@@ -67,6 +69,46 @@ namespace MassEmail.Net.Samples.Console
                 smtpClient.Send(mailMessage);
                 smtpClient.Disconnect(true);
             }
+        }
+    }
+
+    public class RandomEmaiGenerator
+    {
+        private static Random random = new Random();
+
+        public static void Start()
+        {
+            string[] login = new string[] { "Ana", "Raz", "John" };
+            string[] domains = { "google", "outlook", "yahoo", "protonmail" };
+
+            IEnumerable<string> newList1 =
+                login.SelectMany(x => domains, (l, d) => { return l + "@" + d + ".com"; });
+            IEnumerable<string> newList2 =
+                login.SelectMany(new Func<string, IEnumerable<string>>(Abc), new Func<string, string, string>(Dfg));
+        }
+
+        static string[] Abc(string s)
+        {
+            string[] result = new string[] { "cMs","fdfl","dsp" };
+            return result;
+        }
+
+        static string Dfg(string login, string domain)
+        {
+            string result = login + "@" + domain + ".com";
+
+            return result;
+        }
+
+        public static string RandomString(int length)
+        {
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            string a = new string(Enumerable.
+                Range(1, length).
+                Select(_ => chars[random.Next(chars.Length)]).
+                ToArray());
+            
+            return a;
         }
     }
 }
